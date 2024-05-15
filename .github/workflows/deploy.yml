@@ -33,3 +33,11 @@ jobs:
         run: |
           sudo apt-get install -y python3-pip
           pip3 install awsebcli --upgrade --user
+          echo 'export PATH="$HOME/.local/bin:$PATH"' >> $HOME/.bashrc
+          source $HOME/.bashrc
+
+      - name: Init Elastic Beanstalk
+        run: echo "n" | eb init nestjs-eb --region ${{secrets.AWS_REGION}}
+
+      - name: Deploy to Elastic Beanstalk
+        run: eb deploy nestjs-eb-env --staged --label test-my-api-${{github.event.repository.pushed_at}}
